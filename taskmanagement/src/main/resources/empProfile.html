@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard</title>
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .custom-navbar {
+            padding: 15px 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            margin-bottom: 20px;
+        }
+        .sidebar .nav-link {
+            border-bottom: 1px solid black;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 0;
+        }
+        .sidebar .nav-link:hover {
+            background-color: #f8f9fa;
+        }
+        .card {
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background-color: #35aee2;
+            color: white;
+        }
+        .btn-primary {
+            background-color: #35aee2;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #35aee2;
+        }
+        
+        .profile-card {
+            margin-left: 80px; 
+            margin-right: 20px; 
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="custom-navbar">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col d-flex justify-content-between align-items-center">
+                    <span class="navbar-brand mb-0 h1">Task Manager</span>
+                    <button class="btn btn-outline-danger" type="button" id="logoutButton">Logout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  
+    <div class="container-fluid">
+        <div class="row">
+            
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div class="sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="empProfile.html" id="profileNav">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="empproject.html">Projects</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            
+            <main role="main" class="col-md-9">
+                <div class="card profile-card">
+                    <div class="card-header">Profile</div>
+                    <div class="card-body">
+                        <h5>Employee Name: John Doe</h5>
+                        <p><strong>Email:</strong> john.doe@example.com</p>
+                        <p><strong>Position:</strong> Software Developer</p>
+                        <table class="table table-bordered" id="employeeTable">
+                            <tr>
+                                <th>Employee Name</th>
+                                <td id="employeeName">Pratiksha Phadatare</td>
+                            </tr>
+                            <tr>
+                                <th>Employee Email</th>
+                                <td id="employeeEmail">pratiksha01@gmail.com</td>
+                            </tr>
+                            <tr>
+                                <th>Gender</th>
+                                <td id="employeeGender">Female</td>
+                            </tr>
+                            <tr>
+                                <th>Contact Number</th>
+                                <td id="employeeContact">9146896535</td>
+                            </tr>
+                            <tr>
+                                <th>Address</th>
+                                <td id="employeeAddress">Flat 101, Shiv Parvati Apartment, Vighnharta Colony, Gondhlenagar</td>
+                            </tr>
+                            <tr>
+                                <th>Qualification</th>
+                                <td id="employeeQualification">MCA</td>
+                            </tr>
+                            <tr>
+                                <th colspan="2">
+                                    <button class="btn btn-primary" id="editButton">Edit</button>
+                                </th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('editButton').addEventListener('click', handleEditClick);
+
+        function handleEditClick() {
+            const table = document.getElementById('employeeTable');
+            const cells = table.querySelectorAll('td');
+            
+            cells.forEach(cell => {
+                const input = document.createElement('input');
+                input.value = cell.textContent;
+                cell.textContent = '';
+                cell.appendChild(input);
+            });
+
+            const editButton = document.getElementById('editButton');
+            editButton.textContent = 'Save';
+            editButton.removeEventListener('click', handleEditClick);
+            editButton.addEventListener('click', handleSaveClick);
+        }
+
+        function handleSaveClick() {
+            const table = document.getElementById('employeeTable');
+            const inputs = table.querySelectorAll('input');
+
+            inputs.forEach(input => {
+                const cell = input.parentElement;
+                cell.textContent = input.value;
+            });
+
+            const saveButton = document.getElementById('editButton');
+            saveButton.textContent = 'Edit';
+            saveButton.removeEventListener('click', handleSaveClick);
+            saveButton.addEventListener('click', handleEditClick);
+        }
+    </script>
+
+</body>
+</html>

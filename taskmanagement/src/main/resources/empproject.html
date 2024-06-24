@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Dashboard</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .custom-navbar {
+      padding: 15px 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background-color: white;
+      margin-bottom: 20px;
+    }
+    .sidebar .nav-link {
+      border-bottom: 1px solid black;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin: 5px 0;
+      padding: 10px;
+      border-radius: 0;
+    }
+    .sidebar .nav-link:hover {
+      background-color: #f8f9fa;
+    }
+    .card {
+      margin-bottom: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .card-header {
+      background-color: #35aee2;
+      color: white;
+    }
+    .btn-primary {
+      background-color: #35aee2;
+      border: none;
+    }
+    .timer-controls {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <!-- Top Horizontal Bar -->
+    <div class="row custom-navbar">
+      <div class="col d-flex justify-content-between align-items-center">
+        <span class="navbar-brand mb-0 h1">Task Manager</span>
+        <button class="btn btn-outline-danger" type="button" id="logoutButton">Logout</button>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="row">
+      <!-- Vertical Navigation Bar -->
+      <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+        <div class="sidebar-sticky">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link" href="empProfile.html" id="profileNav">Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="empproject.html">Projects</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <!-- Main Content Area -->
+      <main role="main" class="col-md-6 px-md-4">
+        <div class="container mt-5">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="mb-1" id="projecthead">Projects</h3>
+            </div>
+            <div class="card-body">
+              <div id="projects">
+                <ul class="list-group" id="project-list">
+                  <!-- Project items will be injected here by JavaScript -->
+                </ul>
+              </div>
+
+              <div id="tasks" class="mt-5" style="display:none;">
+                <h3>Tasks</h3>
+                <ul class="list-group" id="task-list">
+                  <!-- Task items will be injected here by JavaScript -->
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Task Detail Modal -->
+  <div class="modal fade" id="taskModal" tabindex="-1" role="dialog" aria-labelledby="taskModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="taskModalLabel">Task Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h5 id="taskName"></h5>
+          <p id="taskDescription"></p>
+          <div class="form-group">
+            <label for="workDone">Work Done:</label>
+            <textarea class="form-control" id="workDone" rows="3"></textarea>
+          </div>
+          <div class="timer-controls">
+            <button class="btn btn-primary" id="startTimer">Start Timer</button>
+            <button class="btn btn-danger" id="stopTimer">Stop Timer</button>
+            <p id="timerDisplay" class="mt-3">Time Spent: 00:00:00</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="submitWork">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    // Sample data for projects and tasks
+    const projects = [
+      {
+        id: 1,
+        name: "Project Alpha",
+        tasks: [
+          { id: 1, name: "Task 1", description: "Task 1 description", date: "2024-06-15" },
+          { id: 2, name: "Task 2", description: "Task 2 description", date: "2024-06-16" }
+        ]
+      },
+      {
+        id: 2,
+        name: "Project Beta",
+        tasks: [
+          { id: 3, name: "Task A", description: "Task A description", date: "2024-06-17" },
+          { id: 4, name: "Task B", description: "Task B description", date: "2024-06-18" }
+        ]
+      }
+    ];
+
+    // Function to load projects into the sidebar
+    function loadProjects() {
+      const projectList = document.getElementById('project-list');
+      projects.forEach(project => {
+        const listItem = document.createElement('li');
+        listItem.className = 'list-group-item';
+        listItem.textContent = project.name;
+        listItem.style.cursor = 'pointer';
+        listItem.addEventListener('click', () => showTasks(project));
+        projectList.appendChild(listItem);
+      });
+    }
+
+    // Function to show tasks of a selected project
+    function showTasks(project) {
+      const taskList = document.getElementById('task-list');
+      taskList.innerHTML = '';
+      project.tasks.forEach(task => {
+        const listItem = document.createElement('li');
+        listItem.className = 'list-group-item';
+        listItem.textContent = `${task.name} (${task.date})`;
+        listItem.style.cursor = 'pointer';
+        listItem.addEventListener('click', () => showTaskDetails(task));
+        taskList.appendChild(listItem);
+      });
+      document.getElementById('tasks').style.display = 'block';
+    }
+
+    // Function to show task details in modal
+    function showTaskDetails(task) {
+      const modalTitle = document.getElementById('taskModalLabel');
+      modalTitle.textContent = `Task Details - ${task.name}`;
+
+      const taskName = document.getElementById('taskName');
+      taskName.textContent = task.name;
+
+      const taskDescription = document.getElementById('taskDescription');
+      taskDescription.textContent = task.description;
+
+      $('#taskModal').modal('show');
+    }
+
+    // Function to handle timer functionality
+    let timerInterval;
+    let timerRunning = false;
+    let timerStartTime;
+
+    document.getElementById('startTimer').addEventListener('click', () => {
+      if (!timerRunning) {
+        timerStartTime = new Date();
+        timerInterval = setInterval(updateTimerDisplay, 1000);
+        timerRunning = true;
+      }
+    });
+
+    document.getElementById('stopTimer').addEventListener('click', () => {
+      if (timerRunning) {
+        clearInterval(timerInterval);
+        timerRunning = false;
+      }
+    });
+
+    function updateTimerDisplay() {
+      const currentTime = new Date();
+      const timeDifference = currentTime - timerStartTime;
+      const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+      document.getElementById('timerDisplay').textContent = `Time Spent: ${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
+    }
+
+    function formatTime(time) {
+      return time < 10 ? `0${time}` : time;
+    }
+
+    document.getElementById('submitWork').addEventListener('click', () => {
+      const workDone = document.getElementById('workDone').value;
+      console.log(`Work submitted: ${workDone}`);
+      $('#taskModal').modal('hide');
+    });
+
+    // Load projects on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadProjects();
+    });
+  </script>
+</body>
+</html>

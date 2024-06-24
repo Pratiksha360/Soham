@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Tasks</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .custom-navbar {
+            padding: 15px 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            margin-bottom: 20px;
+        }
+        .sidebar .nav-link {
+            border-bottom: 1px solid black;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 0;
+        }
+        .sidebar .nav-link:hover {
+            background-color: #f8f9fa;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card {
+            margin-bottom: 20px;
+            box-shadow: 5px 8px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background-color: #35aee2;
+            color: white;
+            box-shadow: 0 8px 8px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary {
+            background-color: #35aee2;
+            border: none;
+            box-shadow: 0 8px 8px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary:hover {
+            background-color: #35aee2;
+            box-shadow: 0 8px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <!-- Top Horizontal Bar -->
+    <div class="row custom-navbar">
+        <div class="col d-flex justify-content-between align-items-center">
+            <span class="navbar-brand mb-0 h1">Task Manager</span>
+            <button class="btn btn-outline-danger" type="button" id="logoutButton">Logout</button>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="row">
+        <!-- Vertical Navigation Bar -->
+        <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+            <div class="sidebar-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="admindashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="adminEmployee.html">Manage Employees</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="EmployeecheckInOut.html">Employee Details</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <div class="container col-md-9 col-lg-10 ml-sm-auto px-md-4">
+            <div class="container mt-9">
+                <div class="card">
+                    <div class="card-header">Project Tasks - <span id="projectNameSpan"></span></div>
+                    <div class="card-body">
+                        <h5>Tasks for <span id="projectName"></span></h5>
+                        <ul class="list-group mb-3" id="taskList">
+                            <li class="list-group-item">
+                                <h6>Task 1</h6>
+                                <p><strong>Assigned to:</strong> Employee 1</p>
+                                <p><strong>Remark:</strong> working</p>
+                                <p><strong>Status:</strong> working</p>
+                            </li>
+                        </ul>
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#taskModal">Create New Task</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="taskModalLabel">Create New Task for <span id="projectNameModalSpan"></span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="createTaskForm">
+                    <div class="form-group">
+                        <label for="taskName">Task Name</label>
+                        <input type="text" class="form-control" id="taskName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskDescription">Task Description</label>
+                        <textarea class="form-control" id="taskDescription" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="assignedEmployee">Assign to Employee</label>
+                        <select class="form-control" id="assignedEmployee" required>
+                            <option value="Employee1">Employee 1</option>
+                            <option value="Employee2">Employee 2</option>
+                            <option value="Employee3">Employee 3</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Task</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const params = new URLSearchParams(window.location.search);
+        const projectId = params.get('project');
+        if (projectId) {
+            document.getElementById('projectNameSpan').textContent = 'Project ' + projectId;
+            document.getElementById('projectName').textContent = 'Project ' + projectId;
+            document.getElementById('projectNameModalSpan').textContent = 'Project ' + projectId;
+           
+            const tasks = [
+                { id: 1, name: 'Task 1', assignedTo: 'Employee 1', remark: 'Remark for task 1.', status: 'Pending' },
+                { id: 2, name: 'Task 2', assignedTo: 'Employee 2', remark: 'Remark for task 2.', status: 'Pending' }
+            ];
+            const taskList = document.getElementById('taskList');
+            tasks.forEach(task => {
+                const li = document.createElement('li');
+                li.classList.add('list-group-item');
+                li.innerHTML = `
+                    <h6>${task.name}</h6>
+                    <p><strong>Assigned to:</strong> ${task.assignedTo}</p>
+                    <p><strong>Remark:</strong> ${task.remark}</p>
+                    <p><strong>Status:</strong> ${task.status}</p>
+                `;
+                taskList.appendChild(li);
+            });
+        } else {
+            document.getElementById('projectNameSpan').textContent = 'Unknown Project';
+            document.getElementById('projectName').textContent = 'Unknown Project';
+            document.getElementById('projectNameModalSpan').textContent = 'Unknown Project';
+        }
+    });
+
+    document.getElementById('createTaskForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        alert('Task created successfully!');
+    });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
