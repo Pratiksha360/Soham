@@ -11,6 +11,7 @@ import com.taskmanagement.entity.Task;
 public interface ProjectRepository extends JpaRepository<Project, Integer> {
 	List<Project>findByEmployeeId(Long employeeId);
 
+
 }
 
 
