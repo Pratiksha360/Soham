@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.taskmanagement.entity.Task;
 import com.taskmanagement.repository.TaskRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -24,10 +25,13 @@ public class TaskService {
     }
 
     public Task saveTask(Task task) {
+        task.setCreatedAt(LocalDateTime.now());
+        task.setUpdatedAt(LocalDateTime.now());
         return taskRepository.save(task);
     }
 
     public Task updateTask(Task task) {
+    	 task.setUpdatedAt(LocalDateTime.now());
         return taskRepository.save(task);
     }
 }
