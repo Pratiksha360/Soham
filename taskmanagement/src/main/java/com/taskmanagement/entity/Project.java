@@ -2,6 +2,7 @@ package com.taskmanagement.entity;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
@@ -11,6 +12,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -33,10 +36,13 @@ public class Project {
 	private Date endDate;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
-	
-	@ManyToOne
-	@JoinColumn(name = "employeeId")
-	private Employee employee;
-	
+
+	@ManyToMany
+	@JoinTable(name = "employee_project", joinColumns = @JoinColumn(name = "project_id"), inverseJoinColumns = @JoinColumn(name = "employee_id"))
+	private Set<Employee> employeesId;
+
+//	@ManyToOne
+//	@JoinColumn(name = "employeeId")
+//	private Employee employee;
 
 }

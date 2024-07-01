@@ -21,70 +21,62 @@ public class TaskService {
     private TaskRepository taskRepository;
 
     public ResponseEntity<ResponseStructure<List<Task>>> getTasksByEmployeeId(Long employeeId) {
-    	List<Task> task = taskRepository.findByEmpployeeId(employeeId);
-		ResponseStructure<List<Task>> structure = new ResponseStructure<List<Task>>();
-		if (task != null) {
-			structure.setMessage("Tasks Found successfully");
-			structure.setStatus(HttpStatus.FOUND.value());
-			structure.setData(taskRepository.getTasksByEmployeeId(employeeId));
-
-			return new ResponseEntity<ResponseStructure<List<Task>>>(structure, HttpStatus.FOUND);
-		} else {
-
-			structure.setMessage("Task Not Found");
-			structure.setStatus(HttpStatus.NOT_FOUND.value());
-			structure.setData(null);
-			return new ResponseEntity<ResponseStructure<List<Task>>>(structure, HttpStatus.NOT_FOUND);
-		}
-        
+        List<Task> tasks = taskRepository.getTasksByEmployeeId(employeeId);
+        ResponseStructure<List<Task>> structure = new ResponseStructure<>();
+        if (!tasks.isEmpty()) {
+            structure.setMessage("Tasks Found successfully");
+            structure.setStatus(HttpStatus.FOUND.value());
+            structure.setData(tasks);
+            return new ResponseEntity<>(structure, HttpStatus.FOUND);
+        } else {
+            structure.setMessage("Task Not Found");
+            structure.setStatus(HttpStatus.NOT_FOUND.value());
+            structure.setData(null);
+            return new ResponseEntity<>(structure, HttpStatus.NOT_FOUND);
+        }
     }
 
     public ResponseEntity<ResponseStructure<List<Task>>> getTasksByProjectId(Long projectId) {
-      	List<Task> task = taskRepository.findByProjectId(projectId);
-    		ResponseStructure<List<Task>> structure = new ResponseStructure<List<Task>>();
-    		if (task != null) {
-    			structure.setMessage("Tasks Found successfully");
-    			structure.setStatus(HttpStatus.FOUND.value());
-    			structure.setData(taskRepository.findByProjectId(projectId));
-
-    			return new ResponseEntity<ResponseStructure<List<Task>>>(structure, HttpStatus.FOUND);
-    		} else {
-
-    			structure.setMessage("Task Not Found");
-    			structure.setStatus(HttpStatus.NOT_FOUND.value());
-    			structure.setData(null);
-    			return new ResponseEntity<ResponseStructure<List<Task>>>(structure, HttpStatus.NOT_FOUND);
-    		}
+        List<Task> tasks = taskRepository.findByProjectId(projectId);
+        ResponseStructure<List<Task>> structure = new ResponseStructure<>();
+        if (!tasks.isEmpty()) {
+            structure.setMessage("Tasks Found successfully");
+            structure.setStatus(HttpStatus.FOUND.value());
+            structure.setData(tasks);
+            return new ResponseEntity<>(structure, HttpStatus.FOUND);
+        } else {
+            structure.setMessage("Task Not Found");
+            structure.setStatus(HttpStatus.NOT_FOUND.value());
+            structure.setData(null);
+            return new ResponseEntity<>(structure, HttpStatus.NOT_FOUND);
+        }
     }
 
-    public ResponseEntity<ResponseStructure<Task>>  saveTask(Task task) {
+    public ResponseEntity<ResponseStructure<Task>> saveTask(Task task) {
         task.setCreatedAt(LocalDateTime.now());
         task.setUpdatedAt(LocalDateTime.now());
-        ResponseStructure<Task> structure = new ResponseStructure<Task>();
-		structure.setMessage("Task saved successfully");
-		structure.setStatus(HttpStatus.CREATED.value());
-		structure.setData(taskRepository.save(task));
-		return new ResponseEntity<ResponseStructure<Task>>(structure, HttpStatus.CREATED);
-        
+        ResponseStructure<Task> structure = new ResponseStructure<>();
+        structure.setMessage("Task saved successfully");
+        structure.setStatus(HttpStatus.CREATED.value());
+        structure.setData(taskRepository.save(task));
+        return new ResponseEntity<>(structure, HttpStatus.CREATED);
     }
 
-    public ResponseEntity<ResponseStructure<Task>> updateTask(long tsakId,Task task) {
-    	
- 		ResponseStructure<Task> structure = new ResponseStructure<Task>();
- 		Task task2 = taskRepository.findByTaskId(tsakId);
- 		if (task2 != null) {
- 			 task.setUpdatedAt(LocalDateTime.now());
- 			 taskRepository.save(task);
- 			structure.setMessage("Project  Updated successfully");
- 			structure.setStatus(HttpStatus.OK.value());
- 			structure.setData(task);
- 			return new ResponseEntity<ResponseStructure<Task>>(structure, HttpStatus.OK);
- 		} else {
- 			structure.setMessage("Project  Not Found");
- 			structure.setStatus(HttpStatus.NOT_FOUND.value());
- 			structure.setData(task);
- 			return new ResponseEntity<ResponseStructure<Task>>(structure, HttpStatus.NOT_FOUND);
- 		}
-       
+    public ResponseEntity<ResponseStructure<Task>> updateTask(long taskId, Task task) {
+        ResponseStructure<Task> structure = new ResponseStructure<>();
+        Task existingTask = taskRepository.findByTaskId(taskId);
+        if (existingTask != null) {
+            task.setUpdatedAt(LocalDateTime.now());
+            taskRepository.save(task);
+            structure.setMessage("Task updated successfully");
+            structure.setStatus(HttpStatus.OK.value());
+            structure.setData(task);
+            return new ResponseEntity<>(structure, HttpStatus.OK);
+        } else {
+            structure.setMessage("Task not found");
+            structure.setStatus(HttpStatus.NOT_FOUND.value());
+            structure.setData(task);
+            return new ResponseEntity<>(structure, HttpStatus.NOT_FOUND);
+        }
     }
 }

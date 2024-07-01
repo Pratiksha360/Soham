@@ -8,10 +8,11 @@ import org.springframework.stereotype.Repository;
 import com.taskmanagement.entity.Task;
 
 @Repository
-public interface TaskRepository extends JpaRepository<Task, Long>{
-	
-	List<Task> findByEmpployeeId(Long employeeId);
-	List<Task>findByProjectId(Long projectId);
+public interface TaskRepository extends JpaRepository<Task, Long> {
+
 	List<Task> getTasksByEmployeeId(Long employeeId);
+
+	List<Task> findByProjectId(Long projectId);
+
 	Task findByTaskId(Long taskId);
 }
