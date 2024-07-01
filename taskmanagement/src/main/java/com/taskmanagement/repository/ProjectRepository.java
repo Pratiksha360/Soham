@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
@@ -15,8 +16,9 @@ import com.taskmanagement.util.ResponseStructure;
 public interface ProjectRepository extends JpaRepository<Project, Integer> {
 	Project findByProjectId(Long projectId);
 
-	Project findByEmployeeId(Long employeeId);
+	 List<Project> findByEmployeeId(Long employeeId);
 
-	List<Project> getProjectsByEmployeeId(Long employeeId);
+	@Query("SELECT p FROM Project p WHERE p.employee.employeeId = :employeeId")
+	List<Project> getProjectsByEmployeeId(@Param("employeeId") Long employeeId);
 
 }

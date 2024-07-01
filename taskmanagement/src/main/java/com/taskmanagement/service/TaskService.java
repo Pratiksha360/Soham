@@ -21,7 +21,7 @@ public class TaskService {
     private TaskRepository taskRepository;
 
     public ResponseEntity<ResponseStructure<List<Task>>> getTasksByEmployeeId(Long employeeId) {
-        List<Task> tasks = taskRepository.getTasksByEmployeeId(employeeId);
+        List<Task> tasks = taskRepository.getTasksByEmployee_Id(employeeId);
         ResponseStructure<List<Task>> structure = new ResponseStructure<>();
         if (!tasks.isEmpty()) {
             structure.setMessage("Tasks Found successfully");
@@ -37,7 +37,7 @@ public class TaskService {
     }
 
     public ResponseEntity<ResponseStructure<List<Task>>> getTasksByProjectId(Long projectId) {
-        List<Task> tasks = taskRepository.findByProjectId(projectId);
+        List<Task> tasks = taskRepository.findByProject_ProjectId(projectId);
         ResponseStructure<List<Task>> structure = new ResponseStructure<>();
         if (!tasks.isEmpty()) {
             structure.setMessage("Tasks Found successfully");

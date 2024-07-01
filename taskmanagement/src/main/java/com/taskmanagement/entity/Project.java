@@ -37,12 +37,10 @@ public class Project {
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 
-	@ManyToMany
-	@JoinTable(name = "employee_project", joinColumns = @JoinColumn(name = "project_id"), inverseJoinColumns = @JoinColumn(name = "employee_id"))
-	private Set<Employee> employeesId;
 
-//	@ManyToOne
-//	@JoinColumn(name = "employeeId")
-//	private Employee employee;
+
+	@ManyToOne
+	@JoinColumn(name = "employee_id")
+	private Employee employee;
 
 }

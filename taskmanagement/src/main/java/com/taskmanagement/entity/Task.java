@@ -37,11 +37,14 @@ public class Task {
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	@ManyToOne
-	@JoinColumn(name = "employeeId")
+	@JoinColumn(name = "employee_id")
 	private Employee employee;
+//	@ManyToOne
+//	@NotNull
+//	@JoinColumn(name = "projectId")
+//	private Project project;
 	@ManyToOne
-	@NotNull
-	@JoinColumn(name = "projectId")
+	@JoinColumn(name = "project_id", nullable = false)
 	private Project project;
-	
+
 }
