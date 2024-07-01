@@ -1,9 +1,11 @@
 package com.taskmanagement.controller;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.taskmanagement.entity.Task;
 import com.taskmanagement.service.TaskService;
+import com.taskmanagement.util.ResponseStructure;
 
 import java.util.List;
 
@@ -15,23 +17,23 @@ public class TaskController {
     private TaskService taskService;
 
     @GetMapping("/employee/{employeeId}")
-    public List<Task> getTasksByEmployee(@PathVariable Long employeeId) {
+    public ResponseEntity<ResponseStructure<List<Task>>>  getTasksByEmployee(@PathVariable Long employeeId) {
         return taskService.getTasksByEmployeeId(employeeId);
     }
 
     @GetMapping("/project/{projectId}")
-    public List<Task> getTasksByProject(@PathVariable Long projectId) {
+    public ResponseEntity<ResponseStructure<List<Task>>> getTasksByProject(@PathVariable Long projectId) {
         return taskService.getTasksByProjectId(projectId);
     }
 
-    @PostMapping
-    public Task createTask(@RequestBody Task task) {
+    @PostMapping("/saveTask")
+    public ResponseEntity<ResponseStructure<Task>> createTask(@RequestBody Task task) {
         return taskService.saveTask(task);
     }
 
-    @PutMapping("/{id}")
-    public Task updateTask(@PathVariable Long id, @RequestBody Task task) {
+    @PutMapping("/updateTask")
+    public ResponseEntity<ResponseStructure<Task>> updateTask(@PathVariable Long id, @RequestBody Task task) {
         task.setTaskID(id);
-        return taskService.updateTask(task);
+        return taskService.updateTask(id, task);
     }
 }
